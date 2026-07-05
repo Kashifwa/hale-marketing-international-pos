@@ -42,7 +42,7 @@ A modern desktop Point of Sale (POS) application developed using **WPF (.NET)** 
 ![Purchase](Screenshots/Purcahse.png)
 
 ## Backup & Recovery
-![Backup](Screenshots/Backup and recovery.png)
+![Backup](Screenshots/Backup&Restore.png)
 
 ---
 
