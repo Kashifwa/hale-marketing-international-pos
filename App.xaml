@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Hale_Marketing_International"
              StartupUri="MainWindow.xaml">
+    
     <Application.Resources>
         <!-- Dark Background Colors -->
         <Color x:Key="DarkBackgroundColor">#FF121212</Color>

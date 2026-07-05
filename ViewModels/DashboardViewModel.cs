@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
+using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using Hale_Marketing_International.Services;
@@ -10,7 +11,6 @@ namespace Hale_Marketing_International.ViewModels
     public class DashboardViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
         void Notify([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
@@ -19,6 +19,11 @@ namespace Hale_Marketing_International.ViewModels
         public double TodayPurchase => DashboardService.TodayPurchase();
         public double Profit => TodaySales - TodayPurchase;
         public int LowStock => DashboardService.LowStockCount();
+
+        // NEW: bottom stat row
+        public int TotalProducts => DashboardService.TotalProducts();
+        public int TotalParties => DashboardService.TotalParties();
+        public double DueAmount => DashboardService.TotalDueAmount();
 
         // AI INSIGHTS
         public string SalesInsight => InsightEngine.GetSalesInsight();
@@ -33,7 +38,6 @@ namespace Hale_Marketing_International.ViewModels
         public DashboardViewModel()
         {
             Load();
-
             DashboardHub.RefreshEvent += Refresh;
         }
 
@@ -46,7 +50,6 @@ namespace Hale_Marketing_International.ViewModels
         void Load()
         {
             var sales = DashboardService.GetSalesTrend();
-
             SalesSeries = new ObservableCollection<ISeries>
             {
                 new LineSeries<double>
@@ -57,15 +60,15 @@ namespace Hale_Marketing_International.ViewModels
             };
 
             var top = DashboardService.TopItems();
-
-            TopSeries = new ObservableCollection<ISeries>
-            {
-                new ColumnSeries<double>
+            TopSeries = new ObservableCollection<ISeries>(
+                top.Select(x => new PieSeries<double>
                 {
-                    Values = top.ConvertAll(x => (double)x.Qty),
-                    Name = "Top Items"
-                }
-            };
+                    Values = new double[] { x.Qty },
+                    Name = x.Item,
+                    InnerRadius = 60,
+                    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle
+                })
+            );
         }
     }
 }

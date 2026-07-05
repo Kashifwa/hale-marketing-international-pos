@@ -59,6 +59,38 @@ namespace Hale_Marketing_International.Services
               ) WHERE CurrentStock <= 5";
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
+        public static int TotalProducts()
+        {
+            using var c = new SQLiteConnection(conn);
+            c.Open();
+            var cmd = c.CreateCommand();
+            cmd.CommandText = "SELECT COUNT(*) FROM Products";
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        public static int TotalParties()
+        {
+            using var c = new SQLiteConnection(conn);
+            c.Open();
+            var cmd = c.CreateCommand();
+            cmd.CommandText = "SELECT COUNT(*) FROM Parties";
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        public static double TotalDueAmount()
+        {
+            // Approx receivable due = Total Sales - Cash Received - Sales Returns
+            using var c = new SQLiteConnection(conn);
+            c.Open();
+            var cmd = c.CreateCommand();
+            cmd.CommandText =
+            @"SELECT
+        IFNULL((SELECT SUM(NetTotal) FROM Sales),0)
+      - IFNULL((SELECT SUM(Amount) FROM CashReceipt),0)
+      - IFNULL((SELECT SUM(NetAmount) FROM SalesReturn),0)";
+            var result = cmd.ExecuteScalar();
+            return result == DBNull.Value || result == null ? 0 : Convert.ToDouble(result);
+        }
         // ---------- CHART DATA ----------
         public static List<double> GetSalesTrend()
         {
