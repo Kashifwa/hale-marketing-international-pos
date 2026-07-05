@@ -1,4 +1,18 @@
 # 🛒 Hale Marketing International POS
+<p align="center">
+  <img src="assets/banner.png" width="100%">
+</p>
+
+<h1 align="center">Hale Marketing International POS</h1>
+
+<p align="center">
+Modern WPF Desktop Point of Sale System
+</p>
+![.NET](https://img.shields.io/badge/.NET-8.0-purple)
+![WPF](https://img.shields.io/badge/WPF-Desktop-blue)
+![C#](https://img.shields.io/badge/C%23-Language-green)
+![Windows](https://img.shields.io/badge/Platform-Windows-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 A modern desktop Point of Sale (POS) application developed using **WPF (.NET)** for wholesalers and retail businesses. The system helps manage sales, purchases, inventory, ledgers, payments, and business reports through a clean and user-friendly interface.
 
