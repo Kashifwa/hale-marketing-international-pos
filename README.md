@@ -7,43 +7,28 @@ A modern desktop Point of Sale (POS) application developed using **WPF (.NET)** 
 # 📸 Application Screenshots
 
 ## Login
-![Login](screenshots/login.png)
+![Login](Screenshots/Login.png)
 
 ## Dashboard
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](Screenshots/Dashboard.png)
 
 ## Products
-![Products](screenshots/products.png)
+![Products](Screenshots/Products.png)
+
+## Ledger
+![Ledger-Analytics](Screenshots/Ledger-Analytics.png)
 
 ## Stock Management
-![Stock](screenshots/stock.png)
+![Stock](Screenshots/Stocks.png)
 
 ## Sales
-![Sales](screenshots/sales.png)
+![Sales]Screenshots/Sales.png)
 
 ## Purchase
-![Purchase](screenshots/purchase.png)
-
-## Sales Return
-![Sales Return](screenshots/salesreturn.png)
-
-## Purchase Return
-![Purchase Return](screenshots/purchasereturn.png)
-
-## Party Ledger
-![Party Ledger](screenshots/partyledger.png)
-
-## Item Ledger
-![Item Ledger](screenshots/itemledger.png)
-
-## Cash Receipt
-![Cash Receipt](screenshots/cashreceipt.png)
-
-## Payment Receipt
-![Payment Receipt](screenshots/paymentreceipt.png)
+![Purchase](Screenshots/Purcahse.png)
 
 ## Backup & Recovery
-![Backup](screenshots/backupadnrecovery.png)
+![Backup](Screenshots/Backup and recovery.png)
 
 ---
 
