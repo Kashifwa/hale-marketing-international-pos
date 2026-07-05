@@ -1,0 +1,429 @@
+﻿<Window x:Class="Hale_Marketing_International.ProductsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Products — Hale Marketing International"
+        Height="720" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F1923"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="BgDeep"      Color="#0F1923"/>
+        <SolidColorBrush x:Key="BgCard"      Color="#19242F"/>
+        <SolidColorBrush x:Key="BgInput"     Color="#1E2D3D"/>
+        <SolidColorBrush x:Key="BgInputHov"  Color="#243445"/>
+        <SolidColorBrush x:Key="Accent"      Color="#00C9A7"/>
+        <SolidColorBrush x:Key="AccentSoft"  Color="#1A4F45"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#2A3F52"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#E8F4F8"/>
+        <SolidColorBrush x:Key="TextMuted"   Color="#6B8FA8"/>
+        <SolidColorBrush x:Key="Danger"      Color="#E74C3C"/>
+        <SolidColorBrush x:Key="Warning"     Color="#F39C12"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+            <Setter Property="FontSize"   Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin"     Value="0,0,0,3"/>
+        </Style>
+
+        <Style x:Key="FieldBox" TargetType="TextBox">
+            <Setter Property="Background"      Value="{StaticResource BgInput}"/>
+            <Setter Property="Foreground"      Value="#6B8FA8"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding"         Value="10,8"/>
+            <Setter Property="Height"          Value="36"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="CaretBrush"      Value="{StaticResource Accent}"/>
+            <Setter Property="SelectionBrush"  Value="{StaticResource AccentSoft}"/>
+            <Style.Triggers>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+                    <Setter Property="Background"  Value="{StaticResource BgInputHov}"/>
+                    <Setter Property="Foreground"  Value="{StaticResource TextPrimary}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BtnPrimary" TargetType="Button">
+            <Setter Property="Background"      Value="#00C9A7"/>
+            <Setter Property="Foreground"      Value="#0F1923"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Height"          Value="36"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="16,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#00E5C0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BtnDanger" TargetType="Button">
+            <Setter Property="Background"      Value="#1E2D3D"/>
+            <Setter Property="Foreground"      Value="#E74C3C"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Height"          Value="36"/>
+            <Setter Property="BorderBrush"     Value="#E74C3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="16,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E74C3C"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BtnWarning" TargetType="Button">
+            <Setter Property="Background"      Value="#1E2D3D"/>
+            <Setter Property="Foreground"      Value="#F39C12"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Height"          Value="36"/>
+            <Setter Property="BorderBrush"     Value="#F39C12"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="16,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F39C12"/>
+                    <Setter Property="Foreground" Value="#0F1923"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BtnGhost" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="Foreground"      Value="{StaticResource TextMuted}"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Height"          Value="36"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="16,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BgInput}"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Inline small delete button for grid -->
+        <Style x:Key="BtnInlineDel" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="Foreground"      Value="#E74C3C"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="Height"          Value="24"/>
+            <Setter Property="BorderBrush"     Value="#E74C3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="6,0"/>
+        </Style>
+
+        <Style x:Key="BtnInlineEdit" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="Foreground"      Value="#F39C12"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="Height"          Value="24"/>
+            <Setter Property="BorderBrush"     Value="#F39C12"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="6,0"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background"               Value="Transparent"/>
+            <Setter Property="RowBackground"            Value="#19242F"/>
+            <Setter Property="AlternatingRowBackground" Value="#1A2736"/>
+            <Setter Property="Foreground"               Value="{StaticResource TextPrimary}"/>
+            <Setter Property="BorderThickness"          Value="0"/>
+            <Setter Property="GridLinesVisibility"      Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#1E2D3D"/>
+            <Setter Property="FontSize"                 Value="12"/>
+            <Setter Property="CanUserAddRows"           Value="False"/>
+            <Setter Property="AutoGenerateColumns"      Value="False"/>
+            <Setter Property="SelectionMode"            Value="Single"/>
+            <Setter Property="ColumnHeaderHeight"       Value="38"/>
+            <Setter Property="RowHeight"                Value="34"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background"      Value="#141F2B"/>
+            <Setter Property="Foreground"      Value="#00C9A7"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="Padding"         Value="10,0"/>
+            <Setter Property="BorderBrush"     Value="#1E2D3D"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1E3448"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#1A4F45"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding"         Value="10,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="56"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="36"/>
+        </Grid.RowDefinitions>
+
+        <!-- ══ TOP BAR ══ -->
+        <Border Grid.Row="0" Background="#141F2B" Padding="20,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="4" Height="22" Background="#00C9A7"
+                            CornerRadius="2" Margin="0,0,10,0"/>
+                    <TextBlock Text="PRODUCTS" FontSize="15" FontWeight="Bold"
+                               Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="TxtProductCount" Text="  •  0 items"
+                               FontSize="12" Foreground="#6B8FA8"
+                               VerticalAlignment="Center" Margin="4,0,0,0"/>
+                </StackPanel>
+
+                <!-- Search bar -->
+                <Border Grid.Column="1" Background="#1E2D3D" CornerRadius="4"
+                        BorderBrush="#2A3F52" BorderThickness="1"
+                        Width="320" HorizontalAlignment="Center" Height="36">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="⌕" Foreground="#6B8FA8" FontSize="15"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBox x:Name="SearchBox" Grid.Column="1"
+                                 Background="Transparent" BorderThickness="0"
+                                 Foreground="#6B8FA8" CaretBrush="#00C9A7"
+                                 FontSize="13" Padding="0" VerticalAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 TextChanged="SearchBox_TextChanged"
+                                 GotFocus="SearchBox_GotFocus"
+                                 LostFocus="SearchBox_LostFocus"
+                                 Text="Search products..."/>
+                        <Button x:Name="BtnClearSearch" Grid.Column="2"
+                                Content="✕" Width="28" Background="Transparent"
+                                BorderThickness="0" Foreground="#6B8FA8"
+                                FontSize="11" Cursor="Hand" Margin="0,0,4,0"
+                                Click="BtnClearSearch_Click"
+                                Visibility="Collapsed"/>
+                    </Grid>
+                </Border>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="＋  New"    Style="{StaticResource BtnPrimary}" Margin="4,0" Click="BtnNew_Click"/>
+                    <Button Content="✎  Save"    Style="{StaticResource BtnGhost}"   Margin="4,0" Click="btnSave_Click"/>
+                    <Button Content="🗑 Delete"  Style="{StaticResource BtnDanger}"  Margin="4,0" Click="Delete_Click"/>
+                    <Button Content="Close"       Style="{StaticResource BtnGhost}"   Margin="4,0" Click="btnClose_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ══ FORM — main fields (NO Quantity) ══ -->
+        <Border Grid.Row="1" Background="#141F2B"
+                BorderBrush="#1E2D3D" BorderThickness="0,0,0,1"
+                Padding="20,14,20,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0"  Text="CODE"           Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="2"  Text="PRODUCT NAME"   Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="4"  Text="COMPANY"        Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="6"  Text="PURCHASE PRICE" Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="8"  Text="SALE PRICE"     Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="10" Text="DESCRIPTION"    Style="{StaticResource FieldLabel}"/>
+
+                <TextBox x:Name="txtCode"          Grid.Row="1" Grid.Column="0"
+                         Style="{StaticResource FieldBox}"
+                         GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Tag="Code"/>
+
+                <TextBox x:Name="txtProductName"   Grid.Row="1" Grid.Column="2"
+                         Style="{StaticResource FieldBox}"
+                         GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Tag="Product Name"/>
+
+                <!-- Company: plain free-text, no autocomplete from Parties -->
+                <TextBox x:Name="txtCategory"      Grid.Row="1" Grid.Column="4"
+                         Style="{StaticResource FieldBox}"
+                         GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Tag="Company Name"/>
+
+                <TextBox x:Name="txtPurchasePrice" Grid.Row="1" Grid.Column="6"
+                         Style="{StaticResource FieldBox}"
+                         GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Tag="0.00"/>
+
+                <TextBox x:Name="txtSalePrice"     Grid.Row="1" Grid.Column="8"
+                         Style="{StaticResource FieldBox}"
+                         GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Tag="0.00"/>
+
+                <TextBox x:Name="txtDescription"   Grid.Row="1" Grid.Column="10"
+                         Style="{StaticResource FieldBox}"
+                         GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Tag="Optional notes"/>
+            </Grid>
+        </Border>
+
+        <!-- ══ ACTION ROW ══ -->
+        <Border Grid.Row="2" Background="#141F2B"
+                BorderBrush="#1E2D3D" BorderThickness="0,0,0,1"
+                Padding="20,8,20,12">
+            <StackPanel Orientation="Horizontal">
+                <!-- Attach -->
+                <Button x:Name="BtnAttach" Content="📎 Attach File"
+                        Style="{StaticResource BtnGhost}" Width="130" Height="36" FontSize="11"
+                        Click="BtnAttach_Click"/>
+                <Button x:Name="BtnClearAttach" Content="✕" Height="36" Width="34"
+                        Style="{StaticResource BtnDanger}" FontSize="11" Padding="0"
+                        Click="BtnClearAttach_Click" Visibility="Collapsed"
+                        ToolTip="Remove attachment" Margin="6,0,0,0"/>
+                <TextBlock x:Name="TxtAttachHint" Foreground="#00C9A7" FontSize="11"
+                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                           Visibility="Collapsed" Margin="10,0,0,0" MaxWidth="300"/>
+
+                <!-- Spacer -->
+                <Border Width="1" Background="#2A3F52" Margin="16,4,16,4"/>
+
+                <Button Content="＋  Add Product" Style="{StaticResource BtnPrimary}"
+                        Width="130" Click="Add_Click"/>
+                <Button Content="✎  Update"       Style="{StaticResource BtnWarning}"
+                        Width="100" Margin="8,0,0,0" Click="btnSave_Click"/>
+                <Button Content="🗑 Delete"        Style="{StaticResource BtnDanger}"
+                        Width="100" Margin="8,0,0,0" Click="Delete_Click"/>
+                <Button Content="⟳ Clear"          Style="{StaticResource BtnGhost}"
+                        Width="80"  Margin="8,0,0,0" Click="BtnNew_Click"/>
+
+                <!-- Editing indicator -->
+                <Border x:Name="EditingBadge" Background="#F39C12" CornerRadius="4"
+                        Padding="10,4" Margin="16,0,0,0" VerticalAlignment="Center"
+                        Visibility="Collapsed">
+                    <TextBlock x:Name="TxtEditingLabel" Text="✎ Editing product"
+                               Foreground="#0F1923" FontSize="11" FontWeight="Bold"/>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- ══ DATA GRID ══ -->
+        <Border Grid.Row="3" Background="#0F1923">
+            <DataGrid x:Name="ProductsGrid"
+                      SelectionChanged="ProductsGrid_SelectionChanged"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID"           Binding="{Binding [Id]}"            Width="50"/>
+                    <DataGridTextColumn Header="CODE"         Binding="{Binding [Code]}"           Width="90"/>
+                    <DataGridTextColumn Header="PRODUCT NAME" Binding="{Binding [ProductName]}"    Width="220"/>
+                    <DataGridTextColumn Header="COMPANY"      Binding="{Binding [Category]}"       Width="160"/>
+                    <DataGridTextColumn Header="DESCRIPTION"  Binding="{Binding [Description]}"    Width="*"/>
+                    <DataGridTextColumn Header="PURCHASE"     Binding="{Binding [PurchasePrice], StringFormat=N2}" Width="100"/>
+                    <DataGridTextColumn Header="SALE"         Binding="{Binding [SalePrice], StringFormat=N2}"     Width="90"/>
+                    <!-- Attachment button -->
+                    <DataGridTemplateColumn Header="📎" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="📎 Open" Tag="{Binding [Id]}"
+                                        Height="24" FontSize="11"
+                                        Background="Transparent"
+                                        BorderBrush="#00C9A7" BorderThickness="1"
+                                        Foreground="#00C9A7" Cursor="Hand" Padding="4,0"
+                                        Click="BtnOpenAttach_Click">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding [HasAttachment]}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Edit / Delete inline buttons -->
+                    <DataGridTemplateColumn Header="" Width="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="✎ Edit" Tag="{Binding [Id]}"
+                                        Style="{StaticResource BtnInlineEdit}"
+                                        Click="BtnInlineEdit_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="" Width="74">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="✕ Del" Tag="{Binding [Id]}"
+                                        Style="{StaticResource BtnInlineDel}"
+                                        Click="BtnInlineDelete_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="CREATED" Binding="{Binding [CreatedAt]}" Width="130"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- ══ FOOTER ══ -->
+        <Border Grid.Row="4" Background="#0A1219" Padding="20,0">
+            <Grid>
+                <TextBlock x:Name="TxtStatus" Text="Ready"
+                           Foreground="#6B8FA8" FontSize="11" VerticalAlignment="Center"/>
+                <TextBlock Text="Hale Marketing International"
+                           Foreground="#2A3F52" FontSize="11"
+                           HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

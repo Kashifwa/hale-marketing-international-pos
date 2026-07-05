@@ -1,0 +1,1029 @@
+﻿<Window x:Class="Hale_Marketing_International.CompanyLedgerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Company Ledger — Hale Marketing International"
+        Width="1300" Height="800"
+        WindowStartupLocation="CenterScreen"
+        Background="#111D2B"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="PosTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="28"/>
+        </Grid.RowDefinitions>
+
+        <!-- ══ TOP BAR ══ -->
+        <Border Grid.Row="0" Style="{StaticResource TopBar}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="3" Height="20" Background="{StaticResource Accent}"
+                            CornerRadius="2" Margin="0,0,10,0"/>
+                    <TextBlock Text="COMPANY LEDGER" FontSize="14" FontWeight="Bold"
+                               Foreground="{StaticResource TxtPri}" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="🔄 Refresh"      Style="{StaticResource BtnGhost}"
+                            Margin="4,0" Click="BtnRefresh_Click"/>
+                    <Button Content="🖨 Print P&amp;L" Style="{StaticResource BtnGhost}"
+                            Margin="4,0" Click="BtnPrintPL_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ══ TAB CONTROL ══ -->
+        <TabControl Grid.Row="1" Background="#111D2B"
+                    BorderBrush="{StaticResource Border0}">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Background"  Value="{StaticResource Bg2}"/>
+                    <Setter Property="Foreground"  Value="{StaticResource TxtSec}"/>
+                    <Setter Property="FontWeight"  Value="SemiBold"/>
+                    <Setter Property="FontSize"    Value="12"/>
+                    <Setter Property="Padding"     Value="18,8"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{StaticResource AccentDim}"/>
+                            <Setter Property="Foreground" Value="{StaticResource Accent}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TabControl.Resources>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 TAB 1 — INCOME
+            ══════════════════════════════════════════════════════════════ -->
+            <TabItem Header="📈  INCOME">
+                <Grid Background="{StaticResource Bg1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <DataGrid x:Name="DgIncome" Grid.Row="0"
+                              Style="{StaticResource PosGrid}"
+                              ColumnHeaderStyle="{StaticResource PosGridHeader}"
+                              RowStyle="{StaticResource PosGridRow}"
+                              CellStyle="{StaticResource PosGridCell}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="DATE"
+                                                Binding="{Binding Date}"        Width="90"/>
+                            <DataGridTextColumn Header="TYPE"
+                                                Binding="{Binding Type}"        Width="130"/>
+                            <DataGridTextColumn Header="REFERENCE"
+                                                Binding="{Binding Reference}"   Width="120"/>
+                            <DataGridTextColumn Header="PARTY"
+                                                Binding="{Binding Party}"       Width="160"/>
+                            <DataGridTextColumn Header="DESCRIPTION"
+                                                Binding="{Binding Description}" Width="*"/>
+                            <DataGridTextColumn Header="AMOUNT"
+                                                Binding="{Binding Amount, StringFormat=N2}"
+                                                Width="120"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border Grid.Row="1" Background="{StaticResource Bg0}" Padding="18,10">
+                        <Grid>
+                            <TextBlock Text="Auto-pulled from: Sales Invoices + Cash Receipts. Sales Returns deducted."
+                                       Foreground="{StaticResource TxtMuted}" FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <TextBlock Text="TOTAL INCOME:"
+                                           Foreground="{StaticResource TxtSec}"
+                                           FontWeight="Bold" VerticalAlignment="Center"
+                                           Margin="0,0,12,0"/>
+                                <TextBlock x:Name="TxtTotalIncome" Text="0.00"
+                                           Foreground="{StaticResource Accent}"
+                                           FontSize="18" FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 TAB 2 — EXPENSES  (with filter bar)
+            ══════════════════════════════════════════════════════════════ -->
+            <TabItem Header="📉  EXPENSES">
+                <Grid Background="{StaticResource Bg1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <!-- manual entry form -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- filter bar -->
+                        <RowDefinition Height="*"/>
+                        <!-- datagrid -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- footer -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Manual Entry Form -->
+                    <Border Grid.Row="0" Background="{StaticResource Bg2}"
+                            BorderBrush="{StaticResource Border0}"
+                            BorderThickness="0,0,0,1" Padding="18,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="DATE"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="2" Text="CATEGORY"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="4" Text="AMOUNT"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="6" Text="DESCRIPTION"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="8" Text="PAYMENT MODE"
+                                       Style="{StaticResource FieldLabel}"/>
+
+                            <DatePicker x:Name="DtExpenseDate"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Style="{StaticResource PosDate}"/>
+                            <ComboBox x:Name="CmbExpenseCategory"
+                                      Grid.Row="1" Grid.Column="2"
+                                      Style="{StaticResource PosCombo}"
+                                      IsEditable="True">
+                                <ComboBoxItem>Home / Personal</ComboBoxItem>
+                                <ComboBoxItem>Electricity Bill</ComboBoxItem>
+                                <ComboBoxItem>Rent</ComboBoxItem>
+                                <ComboBoxItem>Salaries</ComboBoxItem>
+                                <ComboBoxItem>Transport</ComboBoxItem>
+                                <ComboBoxItem>Phone / Internet</ComboBoxItem>
+                                <ComboBoxItem>Miscellaneous</ComboBoxItem>
+                            </ComboBox>
+                            <TextBox x:Name="TxtExpenseAmount"
+                                     Grid.Row="1" Grid.Column="4"
+                                     Style="{StaticResource PosInput}"/>
+                            <TextBox x:Name="TxtExpenseDesc"
+                                     Grid.Row="1" Grid.Column="6"
+                                     Style="{StaticResource PosInput}"/>
+                            <ComboBox x:Name="CmbExpensePayMode"
+                                      Grid.Row="1" Grid.Column="8"
+                                      Style="{StaticResource PosCombo}"
+                                      SelectedIndex="0">
+                                <ComboBoxItem>Cash</ComboBoxItem>
+                                <ComboBoxItem>Bank</ComboBoxItem>
+                            </ComboBox>
+                            <Button Grid.Row="1" Grid.Column="10"
+                                    Content="＋ Add"
+                                    Style="{StaticResource BtnPrimary}"
+                                    Click="BtnAddExpense_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Filter Bar -->
+                    <Border Grid.Row="1" Background="{StaticResource Bg0}"
+                            BorderBrush="{StaticResource Border0}"
+                            BorderThickness="0,0,0,1" Padding="16,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="86"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="76"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="FROM"
+                                       Foreground="{StaticResource TxtMuted}"
+                                       FontSize="10" FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                            <DatePicker x:Name="DtExpFilterFrom"
+                                        Grid.Column="2"
+                                        Style="{StaticResource PosDate}"
+                                        Width="130"/>
+
+                            <TextBlock Grid.Column="4" Text="TO"
+                                       Foreground="{StaticResource TxtMuted}"
+                                       FontSize="10" FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                            <DatePicker x:Name="DtExpFilterTo"
+                                        Grid.Column="6"
+                                        Style="{StaticResource PosDate}"
+                                        Width="130"/>
+
+                            <ComboBox x:Name="CmbExpTypeFilter"
+                                      Grid.Column="8"
+                                      Style="{StaticResource PosCombo}"
+                                      Width="160" SelectedIndex="0"
+                                      SelectionChanged="CmbExpTypeFilter_SelectionChanged">
+                                <ComboBoxItem>All Types</ComboBoxItem>
+                                <ComboBoxItem>Purchase</ComboBoxItem>
+                                <ComboBoxItem>Freight</ComboBoxItem>
+                                <ComboBoxItem>Tax</ComboBoxItem>
+                                <ComboBoxItem>Purchase Return</ComboBoxItem>
+                                <ComboBoxItem>Payment Receipt</ComboBoxItem>
+                                <ComboBoxItem>Manual</ComboBoxItem>
+                            </ComboBox>
+
+                            <!-- Search box -->
+                            <Border Grid.Column="10"
+                                    Background="{StaticResource Bg2}"
+                                    BorderBrush="{StaticResource Border0}"
+                                    BorderThickness="1" CornerRadius="4"
+                                    Height="34">
+                                <TextBox x:Name="TxtExpSearch"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="{StaticResource TxtSec}"
+                                         CaretBrush="{StaticResource Accent}"
+                                         FontSize="12"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center"
+                                         Padding="10,0"
+                                         Text="Search party / reference..."
+                                         TextChanged="TxtExpSearch_TextChanged"
+                                         GotFocus="TxtExpSearch_GotFocus"
+                                         LostFocus="TxtExpSearch_LostFocus"/>
+                            </Border>
+
+                            <Button Grid.Column="12" Content="🔍 Filter"
+                                    Style="{StaticResource BtnPrimary}"
+                                    Click="BtnExpFilter_Click"/>
+                            <Button Grid.Column="14" Content="✕ Clear"
+                                    Style="{StaticResource BtnGhost}"
+                                    Click="BtnExpClearFilter_Click"/>
+
+                            <TextBlock x:Name="TxtExpFilterCount"
+                                       Grid.Column="16"
+                                       Text="(0 records)"
+                                       Foreground="{StaticResource TxtMuted}"
+                                       FontSize="11" VerticalAlignment="Center"
+                                       Margin="10,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- DataGrid -->
+                    <DataGrid x:Name="DgExpenses" Grid.Row="2"
+                              Style="{StaticResource PosGrid}"
+                              ColumnHeaderStyle="{StaticResource PosGridHeader}"
+                              RowStyle="{StaticResource PosGridRow}"
+                              CellStyle="{StaticResource PosGridCell}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="DATE"
+                                                Binding="{Binding Date}"        Width="90"/>
+                            <DataGridTextColumn Header="SOURCE"
+                                                Binding="{Binding Type}"        Width="120"/>
+                            <DataGridTextColumn Header="CATEGORY"
+                                                Binding="{Binding Party}"       Width="150"/>
+                            <DataGridTextColumn Header="REFERENCE"
+                                                Binding="{Binding Reference}"   Width="110"/>
+                            <DataGridTextColumn Header="DESCRIPTION"
+                                                Binding="{Binding Description}" Width="*"/>
+                            <DataGridTextColumn Header="AMOUNT"
+                                                Binding="{Binding Amount, StringFormat=N2}"
+                                                Width="120"/>
+                            <DataGridTemplateColumn Header="" Width="70">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="✕ Del"
+                                                Tag="{Binding Id}"
+                                                Style="{StaticResource BtnInlineDel}"
+                                                Click="BtnDeleteExpense_Click"
+                                                Visibility="{Binding CanDelete,
+                                                    Converter={StaticResource BoolToVis}}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Footer -->
+                    <Border Grid.Row="3" Background="{StaticResource Bg0}" Padding="18,10">
+                        <Grid>
+                            <TextBlock Text="Auto: Purchase Invoices, Freight, Tax, Payment Receipts. Manual entries deletable."
+                                       Foreground="{StaticResource TxtMuted}" FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <TextBlock Text="TOTAL EXPENSES:"
+                                           Foreground="{StaticResource TxtSec}"
+                                           FontWeight="Bold" VerticalAlignment="Center"
+                                           Margin="0,0,12,0"/>
+                                <TextBlock x:Name="TxtTotalExpenses" Text="0.00"
+                                           Foreground="{StaticResource Danger}"
+                                           FontSize="18" FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 TAB 3 — ASSETS  (manual entries only)
+            ══════════════════════════════════════════════════════════════ -->
+            <TabItem Header="🏦  ASSETS">
+                <Grid Background="{StaticResource Bg1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Manual Entry Form -->
+                    <Border Grid.Row="0" Background="{StaticResource Bg2}"
+                            BorderBrush="{StaticResource Border0}"
+                            BorderThickness="0,0,0,1" Padding="18,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="DATE"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="2" Text="ASSET TYPE"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="4" Text="VALUE"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="6" Text="DESCRIPTION"
+                                       Style="{StaticResource FieldLabel}"/>
+
+                            <DatePicker x:Name="DtAssetDate"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Style="{StaticResource PosDate}"/>
+                            <ComboBox x:Name="CmbAssetType"
+                                      Grid.Row="1" Grid.Column="2"
+                                      Style="{StaticResource PosCombo}"
+                                      IsEditable="True">
+                                <ComboBoxItem>Cash in Hand</ComboBoxItem>
+                                <ComboBoxItem>Cash in Bank</ComboBoxItem>
+                                <ComboBoxItem>Vehicle</ComboBoxItem>
+                                <ComboBoxItem>Property / Land</ComboBoxItem>
+                                <ComboBoxItem>Equipment</ComboBoxItem>
+                                <ComboBoxItem>Other Fixed Asset</ComboBoxItem>
+                            </ComboBox>
+                            <TextBox x:Name="TxtAssetValue"
+                                     Grid.Row="1" Grid.Column="4"
+                                     Style="{StaticResource PosInput}"/>
+                            <TextBox x:Name="TxtAssetDesc"
+                                     Grid.Row="1" Grid.Column="6"
+                                     Style="{StaticResource PosInput}"/>
+                            <Button Grid.Row="1" Grid.Column="8"
+                                    Content="＋ Add"
+                                    Style="{StaticResource BtnPrimary}"
+                                    Click="BtnAddAsset_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- DataGrid -->
+                    <DataGrid x:Name="DgAssets" Grid.Row="1"
+                              Style="{StaticResource PosGrid}"
+                              ColumnHeaderStyle="{StaticResource PosGridHeader}"
+                              RowStyle="{StaticResource PosGridRow}"
+                              CellStyle="{StaticResource PosGridCell}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="DATE"
+                                                Binding="{Binding Date}"        Width="90"/>
+                            <DataGridTextColumn Header="SOURCE"
+                                                Binding="{Binding Type}"        Width="100"/>
+                            <DataGridTextColumn Header="ASSET TYPE"
+                                                Binding="{Binding Party}"       Width="160"/>
+                            <DataGridTextColumn Header="REFERENCE"
+                                                Binding="{Binding Reference}"   Width="110"/>
+                            <DataGridTextColumn Header="DESCRIPTION"
+                                                Binding="{Binding Description}" Width="*"/>
+                            <DataGridTextColumn Header="VALUE"
+                                                Binding="{Binding Amount, StringFormat=N2}"
+                                                Width="120"/>
+                            <DataGridTemplateColumn Header="" Width="70">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="✕ Del"
+                                                Tag="{Binding Id}"
+                                                Style="{StaticResource BtnInlineDel}"
+                                                Click="BtnDeleteAsset_Click"
+                                                Visibility="{Binding CanDelete,
+                                                    Converter={StaticResource BoolToVis}}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Footer -->
+                    <Border Grid.Row="2" Background="{StaticResource Bg0}" Padding="18,10">
+                        <Grid>
+                            <TextBlock Text="Manual asset entries only — cash, vehicles, property, equipment. All entries deletable."
+                                       Foreground="{StaticResource TxtMuted}" FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <TextBlock Text="TOTAL ASSETS:"
+                                           Foreground="{StaticResource TxtSec}"
+                                           FontWeight="Bold" VerticalAlignment="Center"
+                                           Margin="0,0,12,0"/>
+                                <TextBlock x:Name="TxtTotalAssets" Text="0.00"
+                                           Foreground="{StaticResource Success}"
+                                           FontSize="18" FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 TAB 4 — LIABILITIES
+            ══════════════════════════════════════════════════════════════ -->
+            <TabItem Header="⚖️  LIABILITIES">
+                <Grid Background="{StaticResource Bg1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Manual Entry Form -->
+                    <Border Grid.Row="0" Background="{StaticResource Bg2}"
+                            BorderBrush="{StaticResource Border0}"
+                            BorderThickness="0,0,0,1" Padding="18,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="DATE"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="2" Text="LIABILITY TYPE"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="4" Text="AMOUNT"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="6" Text="DESCRIPTION"
+                                       Style="{StaticResource FieldLabel}"/>
+
+                            <DatePicker x:Name="DtLiabilityDate"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Style="{StaticResource PosDate}"/>
+                            <ComboBox x:Name="CmbLiabilityType"
+                                      Grid.Row="1" Grid.Column="2"
+                                      Style="{StaticResource PosCombo}"
+                                      IsEditable="True">
+                                <ComboBoxItem>Bank Loan</ComboBoxItem>
+                                <ComboBoxItem>Personal Loan</ComboBoxItem>
+                                <ComboBoxItem>Credit Payable</ComboBoxItem>
+                                <ComboBoxItem>Other Payable</ComboBoxItem>
+                            </ComboBox>
+                            <TextBox x:Name="TxtLiabilityAmount"
+                                     Grid.Row="1" Grid.Column="4"
+                                     Style="{StaticResource PosInput}"/>
+                            <TextBox x:Name="TxtLiabilityDesc"
+                                     Grid.Row="1" Grid.Column="6"
+                                     Style="{StaticResource PosInput}"/>
+                            <Button Grid.Row="1" Grid.Column="8"
+                                    Content="＋ Add"
+                                    Style="{StaticResource BtnPrimary}"
+                                    Click="BtnAddLiability_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- DataGrid -->
+                    <DataGrid x:Name="DgLiabilities" Grid.Row="1"
+                              Style="{StaticResource PosGrid}"
+                              ColumnHeaderStyle="{StaticResource PosGridHeader}"
+                              RowStyle="{StaticResource PosGridRow}"
+                              CellStyle="{StaticResource PosGridCell}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="DATE"
+                                                Binding="{Binding Date}"        Width="90"/>
+                            <DataGridTextColumn Header="SOURCE"
+                                                Binding="{Binding Type}"        Width="100"/>
+                            <DataGridTextColumn Header="LIABILITY TYPE"
+                                                Binding="{Binding Party}"       Width="160"/>
+                            <DataGridTextColumn Header="REFERENCE"
+                                                Binding="{Binding Reference}"   Width="110"/>
+                            <DataGridTextColumn Header="DESCRIPTION"
+                                                Binding="{Binding Description}" Width="*"/>
+                            <DataGridTextColumn Header="AMOUNT"
+                                                Binding="{Binding Amount, StringFormat=N2}"
+                                                Width="120"/>
+                            <DataGridTemplateColumn Header="" Width="70">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="✕ Del"
+                                                Tag="{Binding Id}"
+                                                Style="{StaticResource BtnInlineDel}"
+                                                Click="BtnDeleteLiability_Click"
+                                                Visibility="{Binding CanDelete,
+                                                    Converter={StaticResource BoolToVis}}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Footer -->
+                    <Border Grid.Row="2" Background="{StaticResource Bg0}" Padding="18,10">
+                        <Grid>
+                            <TextBlock Text="Auto: Payable party balances (what we owe suppliers). Manual: loans, other payables."
+                                       Foreground="{StaticResource TxtMuted}" FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <TextBlock Text="TOTAL LIABILITIES:"
+                                           Foreground="{StaticResource TxtSec}"
+                                           FontWeight="Bold" VerticalAlignment="Center"
+                                           Margin="0,0,12,0"/>
+                                <TextBlock x:Name="TxtTotalLiabilities" Text="0.00"
+                                           Foreground="{StaticResource Warning}"
+                                           FontSize="18" FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 TAB 5 — PROFIT & LOSS
+            ══════════════════════════════════════════════════════════════ -->
+            <TabItem Header="📊  PROFIT &amp; LOSS">
+                <Grid Background="{StaticResource Bg1}" Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <Border Grid.Row="0" Background="{StaticResource Bg0}"
+                            CornerRadius="6" Padding="18,12" Margin="0,0,0,12">
+                        <TextBlock Text="Profit &amp; Loss Statement"
+                                   FontSize="16" FontWeight="Bold"
+                                   Foreground="{StaticResource Accent}"
+                                   HorizontalAlignment="Center"/>
+                    </Border>
+
+                    <!-- Date Filter Bar -->
+                    <Border Grid.Row="1" Background="{StaticResource Bg2}"
+                            CornerRadius="6" Padding="16,10" Margin="0,0,0,12"
+                            BorderBrush="{StaticResource Border0}" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="FROM:"
+                                       Foreground="{StaticResource TxtSec}"
+                                       FontWeight="Bold" VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+                            <DatePicker x:Name="DtPLFrom"
+                                        Style="{StaticResource PosDate}"
+                                        Width="130" VerticalAlignment="Center"/>
+                            <TextBlock Text="TO:"
+                                       Foreground="{StaticResource TxtSec}"
+                                       FontWeight="Bold" VerticalAlignment="Center"
+                                       Margin="16,0,8,0"/>
+                            <DatePicker x:Name="DtPLTo"
+                                        Style="{StaticResource PosDate}"
+                                        Width="130" VerticalAlignment="Center"/>
+                            <Button Content="📊 Show Filtered"
+                                    Style="{StaticResource BtnPrimary}"
+                                    Margin="12,0,6,0" Click="BtnPLFilter_Click"/>
+                            <Button Content="📋 All Time"
+                                    Style="{StaticResource BtnGhost}"
+                                    Margin="4,0" Click="BtnPLAllTime_Click"/>
+                            <Border Width="1" Background="{StaticResource Border0}"
+                                    Margin="12,2"/>
+                            <TextBlock x:Name="TxtPLFilterLabel"
+                                       Text="Showing: All Time"
+                                       Foreground="{StaticResource TxtMuted}"
+                                       FontSize="11" VerticalAlignment="Center"
+                                       Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Income Section -->
+                    <Border Grid.Row="2" Background="{StaticResource Bg2}"
+                            CornerRadius="6" Padding="18,12" Margin="0,0,0,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="INCOME"
+                                           Foreground="{StaticResource Accent}"
+                                           FontWeight="Bold" FontSize="12"
+                                           Margin="0,0,0,8"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Sales Revenue"
+                                                   Foreground="{StaticResource TxtSec}"
+                                                   Margin="0,3"/>
+                                        <TextBlock Text="(-) Sales Return"
+                                                   Foreground="{StaticResource TxtSec}"
+                                                   Margin="0,3"/>
+                                        <TextBlock Text="─────────────────"
+                                                   Foreground="{StaticResource Border1}"
+                                                   Margin="0,4"/>
+                                        <TextBlock Text="Net Income"
+                                                   Foreground="{StaticResource TxtPri}"
+                                                   FontWeight="Bold" Margin="0,3"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1"
+                                                HorizontalAlignment="Right">
+                                        <TextBlock x:Name="TxtPL_Sales" Text="0.00"
+                                                   Foreground="{StaticResource TxtPri}"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                        <TextBlock x:Name="TxtPL_SReturn" Text="0.00"
+                                                   Foreground="{StaticResource Danger}"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                        <TextBlock Text="" Margin="0,4"/>
+                                        <TextBlock x:Name="TxtPL_NetIncome" Text="0.00"
+                                                   Foreground="{StaticResource Accent}"
+                                                   FontWeight="Bold"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Expenses Section -->
+                    <Border Grid.Row="3" Background="{StaticResource Bg2}"
+                            CornerRadius="6" Padding="18,12" Margin="0,0,0,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="EXPENSES"
+                                           Foreground="{StaticResource Danger}"
+                                           FontWeight="Bold" FontSize="12"
+                                           Margin="0,0,0,8"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Purchase Cost"
+                                                   Foreground="{StaticResource TxtSec}"
+                                                   Margin="0,3"/>
+                                        <TextBlock Text="(-) Purchase Returns"
+                                                   Foreground="{StaticResource TxtSec}"
+                                                   Margin="0,3"/>
+                                        <TextBlock Text="Freight Paid"
+                                                   Foreground="{StaticResource TxtSec}"
+                                                   Margin="0,3"/>
+                                        <TextBlock Text="Tax Paid"
+                                                   Foreground="{StaticResource TxtSec}"
+                                                   Margin="0,3"/>
+                                        <TextBlock Text="Other Expenses + Payments"
+                                                   Foreground="{StaticResource TxtSec}"
+                                                   Margin="0,3"/>
+                                        <TextBlock Text="─────────────────"
+                                                   Foreground="{StaticResource Border1}"
+                                                   Margin="0,4"/>
+                                        <TextBlock Text="Total Expenses"
+                                                   Foreground="{StaticResource TxtPri}"
+                                                   FontWeight="Bold" Margin="0,3"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1"
+                                                HorizontalAlignment="Right">
+                                        <TextBlock x:Name="TxtPL_Purchase" Text="0.00"
+                                                   Foreground="{StaticResource TxtPri}"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                        <TextBlock x:Name="TxtPL_PReturn" Text="0.00"
+                                                   Foreground="{StaticResource Accent}"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                        <TextBlock x:Name="TxtPL_Freight" Text="0.00"
+                                                   Foreground="{StaticResource TxtPri}"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                        <TextBlock x:Name="TxtPL_Tax" Text="0.00"
+                                                   Foreground="{StaticResource TxtPri}"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                        <TextBlock x:Name="TxtPL_OtherExp" Text="0.00"
+                                                   Foreground="{StaticResource TxtPri}"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                        <TextBlock Text="" Margin="0,4"/>
+                                        <TextBlock x:Name="TxtPL_TotalExpenses" Text="0.00"
+                                                   Foreground="{StaticResource Danger}"
+                                                   FontWeight="Bold"
+                                                   TextAlignment="Right" Margin="0,3"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Net Profit Box (filtered period) -->
+                    <Border Grid.Row="4"
+                            Background="{StaticResource AccentDim}"
+                            CornerRadius="6" Padding="18,14" Margin="0,0,0,8">
+                        <Grid>
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <TextBlock x:Name="TxtPLPeriodLabel"
+                                           Text="NET PROFIT / (LOSS) — ALL TIME"
+                                           Foreground="{StaticResource Accent}"
+                                           FontWeight="Bold" FontSize="14"/>
+                            </StackPanel>
+                            <TextBlock x:Name="TxtPL_NetProfit" Text="0.00"
+                                       HorizontalAlignment="Right"
+                                       Foreground="{StaticResource Accent}"
+                                       FontSize="22" FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- All-Time Net Profit (shown only when date filter applied) -->
+                    <Border Grid.Row="5" x:Name="BorderPLAllTime"
+                            Background="{StaticResource Bg2}"
+                            CornerRadius="6" Padding="18,10" Margin="0,0,0,8"
+                            Visibility="Collapsed">
+                        <Grid>
+                            <TextBlock Text="NET PROFIT / (LOSS) — ALL TIME"
+                                       Foreground="{StaticResource TxtSec}"
+                                       FontWeight="Bold" FontSize="12"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtPL_AllTimeNetProfit" Text="0.00"
+                                       HorizontalAlignment="Right"
+                                       Foreground="{StaticResource TxtSec}"
+                                       FontSize="16" FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Balance Sheet Summary -->
+                    <Border Grid.Row="6" Background="{StaticResource Bg2}"
+                            CornerRadius="6" Padding="18,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="TOTAL ASSETS (Manual)"
+                                           Foreground="{StaticResource TxtSec}"
+                                           FontSize="11" FontWeight="Bold"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="TxtPL_Assets" Text="0.00"
+                                           Foreground="{StaticResource Success}"
+                                           FontSize="18" FontWeight="Bold"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                <TextBlock Text="TOTAL LIABILITIES"
+                                           Foreground="{StaticResource TxtSec}"
+                                           FontSize="11" FontWeight="Bold"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="TxtPL_Liabilities" Text="0.00"
+                                           Foreground="{StaticResource Warning}"
+                                           FontSize="18" FontWeight="Bold"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                                <TextBlock Text="NET WORTH"
+                                           Foreground="{StaticResource TxtSec}"
+                                           FontSize="11" FontWeight="Bold"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="TxtPL_NetWorth" Text="0.00"
+                                           Foreground="{StaticResource Accent}"
+                                           FontSize="18" FontWeight="Bold"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 TAB 6 — LEDGER (DEBIT / CREDIT)
+            ══════════════════════════════════════════════════════════════ -->
+            <TabItem Header="📒  LEDGER">
+                <Grid Background="{StaticResource Bg1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Filter Bar -->
+                    <Border Grid.Row="0" Background="{StaticResource Bg2}"
+                            BorderBrush="{StaticResource Border0}"
+                            BorderThickness="0,0,0,1" Padding="18,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="FROM DATE"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="4" Text="TO DATE"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Grid.Column="8" Text="SHOW"
+                                       Style="{StaticResource FieldLabel}"/>
+
+                            <DatePicker x:Name="DtLedgerFrom"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Style="{StaticResource PosDate}" Width="130"/>
+                            <DatePicker x:Name="DtLedgerTo"
+                                        Grid.Row="1" Grid.Column="4"
+                                        Style="{StaticResource PosDate}" Width="130"/>
+
+                            <!-- DR / CR / Both toggle -->
+                            <StackPanel Grid.Row="1" Grid.Column="8"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <RadioButton x:Name="RbLedgerBoth"
+                                             Content="Both"
+                                             GroupName="LedgerFilter"
+                                             IsChecked="True"
+                                             Foreground="{StaticResource TxtPri}"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,10,0"/>
+                                <RadioButton x:Name="RbLedgerDebit"
+                                             Content="Debit"
+                                             GroupName="LedgerFilter"
+                                             Foreground="{StaticResource Danger}"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,10,0"/>
+                                <RadioButton x:Name="RbLedgerCredit"
+                                             Content="Credit"
+                                             GroupName="LedgerFilter"
+                                             Foreground="{StaticResource Accent}"
+                                             VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Button Grid.Row="1" Grid.Column="10"
+                                    Content="🔍 Show Ledger"
+                                    Style="{StaticResource BtnPrimary}"
+                                    Margin="12,0,0,0"
+                                    Click="BtnShowLedger_Click"/>
+                            <Button Grid.Row="1" Grid.Column="12"
+                                    Content="🖨 Print Ledger"
+                                    Style="{StaticResource BtnGhost}"
+                                    Margin="8,0,0,0"
+                                    Click="BtnPrintLedger_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Ledger DataGrid -->
+                    <DataGrid x:Name="DgLedger" Grid.Row="1"
+                              Style="{StaticResource PosGrid}"
+                              ColumnHeaderStyle="{StaticResource PosGridHeader}"
+                              RowStyle="{StaticResource PosGridRow}"
+                              CellStyle="{StaticResource PosGridCell}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="DATE"
+                                                Binding="{Binding Date}"        Width="90"/>
+                            <DataGridTextColumn Header="TYPE"
+                                                Binding="{Binding EntryType}"   Width="120"/>
+                            <DataGridTextColumn Header="DR / CR"
+                                                Binding="{Binding DrCr}"        Width="70"/>
+                            <DataGridTextColumn Header="REFERENCE"
+                                                Binding="{Binding Reference}"   Width="120"/>
+                            <DataGridTextColumn Header="PARTY"
+                                                Binding="{Binding Party}"       Width="150"/>
+                            <DataGridTextColumn Header="DESCRIPTION"
+                                                Binding="{Binding Description}" Width="*"/>
+                            <DataGridTextColumn Header="DEBIT"
+                                                Binding="{Binding Debit,  StringFormat=N2}"
+                                                Width="110"/>
+                            <DataGridTextColumn Header="CREDIT"
+                                                Binding="{Binding Credit, StringFormat=N2}"
+                                                Width="110"/>
+                            <DataGridTextColumn Header="BALANCE"
+                                                Binding="{Binding Balance,StringFormat=N2}"
+                                                Width="120"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Footer Totals -->
+                    <Border Grid.Row="2" Background="{StaticResource Bg0}" Padding="18,10">
+                        <Grid>
+                            <TextBlock x:Name="TxtLedgerInfo"
+                                       Text="Select date range and click Show Ledger."
+                                       Foreground="{StaticResource TxtMuted}"
+                                       FontSize="11" VerticalAlignment="Center"/>
+                            <StackPanel HorizontalAlignment="Right"
+                                        Orientation="Horizontal">
+                                <TextBlock Text="TOTAL DEBIT:"
+                                           Foreground="{StaticResource Danger}"
+                                           FontWeight="Bold" VerticalAlignment="Center"
+                                           Margin="0,0,6,0"/>
+                                <TextBlock x:Name="TxtLedgerTotalDebit" Text="0.00"
+                                           Foreground="{StaticResource Danger}"
+                                           FontSize="15" FontWeight="Bold"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,24,0"/>
+                                <TextBlock Text="TOTAL CREDIT:"
+                                           Foreground="{StaticResource Accent}"
+                                           FontWeight="Bold" VerticalAlignment="Center"
+                                           Margin="0,0,6,0"/>
+                                <TextBlock x:Name="TxtLedgerTotalCredit" Text="0.00"
+                                           Foreground="{StaticResource Accent}"
+                                           FontSize="15" FontWeight="Bold"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,24,0"/>
+                                <TextBlock Text="NET BALANCE:"
+                                           Foreground="{StaticResource TxtSec}"
+                                           FontWeight="Bold" VerticalAlignment="Center"
+                                           Margin="0,0,6,0"/>
+                                <TextBlock x:Name="TxtLedgerNetBalance" Text="0.00"
+                                           Foreground="{StaticResource TxtPri}"
+                                           FontSize="15" FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+
+        <!-- ══ FOOTER ══ -->
+        <Border Grid.Row="2" Background="{StaticResource Bg0}" Padding="18,0">
+            <TextBlock Text="Hale Marketing International — Company Ledger"
+                       Foreground="{StaticResource TxtMuted}" FontSize="10"
+                       VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</Window>

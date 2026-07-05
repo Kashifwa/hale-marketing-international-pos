@@ -1,0 +1,273 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ══════════════════════════════════════════════════════
+         HALE MARKETING POS — SHARED THEME
+         Palette: Deep charcoal + electric teal accent
+    ══════════════════════════════════════════════════════ -->
+    <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    <!-- Core palette -->
+    <SolidColorBrush x:Key="Bg0"        Color="#0C1520"/>
+    <!-- deepest bg -->
+    <SolidColorBrush x:Key="Bg1"        Color="#111D2B"/>
+    <!-- window bg -->
+    <SolidColorBrush x:Key="Bg2"        Color="#172030"/>
+    <!-- card / panel -->
+    <SolidColorBrush x:Key="Bg3"        Color="#1C2A3A"/>
+    <!-- input bg -->
+    <SolidColorBrush x:Key="Bg4"        Color="#223040"/>
+    <!-- input hover -->
+    <SolidColorBrush x:Key="Border0"    Color="#1E2E40"/>
+    <!-- subtle border -->
+    <SolidColorBrush x:Key="Border1"    Color="#2A3F55"/>
+    <!-- normal border -->
+    <SolidColorBrush x:Key="Accent"     Color="#00BFA5"/>
+    <!-- teal accent -->
+    <SolidColorBrush x:Key="AccentDim"  Color="#004D40"/>
+    <!-- selection bg -->
+    <SolidColorBrush x:Key="AccentHot"  Color="#1DE9B6"/>
+    <!-- hover accent -->
+    <SolidColorBrush x:Key="Danger"     Color="#EF5350"/>
+    <SolidColorBrush x:Key="DangerDim"  Color="#3E1111"/>
+    <SolidColorBrush x:Key="Warning"    Color="#FFB300"/>
+    <SolidColorBrush x:Key="Success"    Color="#66BB6A"/>
+    <SolidColorBrush x:Key="TxtPri"     Color="#E8F0F7"/>
+    <SolidColorBrush x:Key="TxtSec"     Color="#7B9BB8"/>
+    <SolidColorBrush x:Key="TxtMuted"   Color="#3D5570"/>
+    <SolidColorBrush x:Key="TxtPlace"   Color="#4A6480"/>
+
+    <!-- ── LABEL (FieldLabel) ── -->
+    <Style x:Key="FieldLabel" TargetType="TextBlock">
+        <Setter Property="Foreground"  Value="{StaticResource TxtSec}"/>
+        <Setter Property="FontSize"    Value="10"/>
+        <Setter Property="FontWeight"  Value="SemiBold"/>
+        <Setter Property="Margin"      Value="0,0,0,4"/>
+    </Style>
+
+    <!-- ── INPUT TEXTBOX ── -->
+    <Style x:Key="PosInput" TargetType="TextBox">
+        <Setter Property="Background"      Value="{StaticResource Bg3}"/>
+        <Setter Property="Foreground"      Value="{StaticResource TxtPlace}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Border1}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding"         Value="9,7"/>
+        <Setter Property="Height"          Value="34"/>
+        <Setter Property="FontSize"        Value="12"/>
+        <Setter Property="CaretBrush"      Value="{StaticResource Accent}"/>
+        <Setter Property="SelectionBrush"  Value="{StaticResource AccentDim}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Style.Triggers>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="BorderBrush"  Value="{StaticResource Accent}"/>
+                <Setter Property="Background"   Value="{StaticResource Bg4}"/>
+                <Setter Property="Foreground"   Value="{StaticResource TxtPri}"/>
+            </Trigger>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="Background"  Value="{StaticResource Bg2}"/>
+                <Setter Property="Foreground"  Value="{StaticResource TxtSec}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource Border0}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ── COMBO BOX ── -->
+    <Style x:Key="PosCombo" TargetType="ComboBox">
+        <Setter Property="Background"      Value="{StaticResource Bg3}"/>
+        <Setter Property="Foreground"      Value="{StaticResource TxtPri}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Border1}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Height"          Value="34"/>
+        <Setter Property="FontSize"        Value="12"/>
+        <Setter Property="Padding"         Value="8,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsDropDownOpen" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ── DATE PICKER ── -->
+    <Style x:Key="PosDate" TargetType="DatePicker">
+        <Setter Property="Background"      Value="{StaticResource Bg4}"/>
+        <Setter Property="Foreground"      Value="{StaticResource TxtPri}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Border1}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Height"          Value="34"/>
+        <Setter Property="FontSize"        Value="12"/>
+        <Setter Property="Padding"         Value="6,0"/>
+    </Style>
+
+    <!-- ── PRIMARY BUTTON ── -->
+    <Style x:Key="BtnPrimary" TargetType="Button">
+        <Setter Property="Background"      Value="{StaticResource Accent}"/>
+        <Setter Property="Foreground"      Value="#0C1520"/>
+        <Setter Property="FontWeight"      Value="Bold"/>
+        <Setter Property="FontSize"        Value="12"/>
+        <Setter Property="Height"          Value="34"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor"          Value="Hand"/>
+        <Setter Property="Padding"         Value="16,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource AccentHot}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#009688"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ── GHOST BUTTON ── -->
+    <Style x:Key="BtnGhost" TargetType="Button">
+        <Setter Property="Background"      Value="Transparent"/>
+        <Setter Property="Foreground"      Value="{StaticResource TxtSec}"/>
+        <Setter Property="FontWeight"      Value="SemiBold"/>
+        <Setter Property="FontSize"        Value="12"/>
+        <Setter Property="Height"          Value="34"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Border1}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor"          Value="Hand"/>
+        <Setter Property="Padding"         Value="14,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background"  Value="{StaticResource Bg3}"/>
+                <Setter Property="Foreground"  Value="{StaticResource TxtPri}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ── DANGER BUTTON ── -->
+    <Style x:Key="BtnDanger" TargetType="Button">
+        <Setter Property="Background"      Value="Transparent"/>
+        <Setter Property="Foreground"      Value="{StaticResource Danger}"/>
+        <Setter Property="FontWeight"      Value="SemiBold"/>
+        <Setter Property="FontSize"        Value="12"/>
+        <Setter Property="Height"          Value="34"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Danger}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor"          Value="Hand"/>
+        <Setter Property="Padding"         Value="14,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Danger}"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ── SMALL INLINE DELETE BUTTON (in DataGrid) ── -->
+    <Style x:Key="BtnInlineDel" TargetType="Button">
+        <Setter Property="Background"      Value="Transparent"/>
+        <Setter Property="Foreground"      Value="{StaticResource Danger}"/>
+        <Setter Property="FontSize"        Value="11"/>
+        <Setter Property="Height"          Value="24"/>
+        <Setter Property="Width"           Value="60"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Danger}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor"          Value="Hand"/>
+        <Setter Property="Padding"         Value="4,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Danger}"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ── DATAGRID ── -->
+    <Style x:Key="PosGrid" TargetType="DataGrid">
+        <Setter Property="Background"               Value="Transparent"/>
+        <Setter Property="RowBackground"            Value="{StaticResource Bg2}"/>
+        <Setter Property="AlternatingRowBackground" Value="{StaticResource Bg1}"/>
+        <Setter Property="Foreground"               Value="{StaticResource TxtPri}"/>
+        <Setter Property="BorderThickness"          Value="0"/>
+        <Setter Property="GridLinesVisibility"      Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource Border0}"/>
+        <Setter Property="FontSize"                 Value="12"/>
+        <Setter Property="CanUserAddRows"           Value="False"/>
+        <Setter Property="AutoGenerateColumns"      Value="False"/>
+        <Setter Property="SelectionMode"            Value="Single"/>
+        <Setter Property="SelectionUnit"            Value="FullRow"/>
+        <Setter Property="ColumnHeaderHeight"       Value="36"/>
+        <Setter Property="RowHeight"                Value="32"/>
+        <Setter Property="IsReadOnly"               Value="True"/>
+    </Style>
+
+    <Style x:Key="PosGridHeader" TargetType="DataGridColumnHeader">
+        <Setter Property="Background"      Value="{StaticResource Bg0}"/>
+        <Setter Property="Foreground"      Value="{StaticResource Accent}"/>
+        <Setter Property="FontWeight"      Value="SemiBold"/>
+        <Setter Property="FontSize"        Value="11"/>
+        <Setter Property="Padding"         Value="10,0"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Border0}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    </Style>
+
+    <Style x:Key="PosGridRow" TargetType="DataGridRow">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Bg4}"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource AccentDim}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PosGridCell" TargetType="DataGridCell">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding"         Value="10,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ── TOP BAR (shared) ── -->
+    <Style x:Key="TopBar" TargetType="Border">
+        <Setter Property="Background"      Value="{StaticResource Bg0}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Border0}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Padding"         Value="18,0"/>
+        <Setter Property="Height"          Value="52"/>
+    </Style>
+
+    <!-- ── SECTION PANEL ── -->
+    <Style x:Key="SectionPanel" TargetType="Border">
+        <Setter Property="Background"      Value="{StaticResource Bg2}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Border0}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Padding"         Value="18,12"/>
+    </Style>
+
+    <!-- ── TOTALS PANEL ── -->
+    <Style x:Key="TotalsPanel" TargetType="Border">
+        <Setter Property="Background"      Value="{StaticResource Bg2}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Border0}"/>
+        <Setter Property="BorderThickness" Value="0,1,0,0"/>
+        <Setter Property="Padding"         Value="18,12"/>
+    </Style>
+
+    <!-- ── AMOUNT LABEL (large) ── -->
+    <Style x:Key="AmountLabel" TargetType="TextBlock">
+        <Setter Property="Foreground"  Value="{StaticResource Accent}"/>
+        <Setter Property="FontSize"    Value="18"/>
+        <Setter Property="FontWeight"  Value="Bold"/>
+    </Style>
+
+    <!-- ── SECTION TITLE ── -->
+    <Style x:Key="SectionTitle" TargetType="TextBlock">
+        <Setter Property="Foreground"  Value="{StaticResource TxtSec}"/>
+        <Setter Property="FontSize"    Value="10"/>
+        <Setter Property="FontWeight"  Value="SemiBold"/>
+        <Setter Property="Margin"      Value="0,0,0,6"/>
+    </Style>
+
+</ResourceDictionary>

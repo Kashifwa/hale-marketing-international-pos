@@ -1,0 +1,460 @@
+﻿<Window x:Class="Hale_Marketing_International.PaymentReceiptWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Payment Receipt — Hale Marketing International"
+        Height="780"
+        Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="#111D2B"
+        ResizeMode="CanResize"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background"      Value="#0C1520"/>
+            <Setter Property="Foreground"      Value="#6B8FA8"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="FontSize"        Value="10"/>
+            <Setter Property="Height"          Value="28"/>
+            <Setter Property="Padding"         Value="8,0"/>
+            <Setter Property="BorderBrush"     Value="#1C2D3A"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        </Style>
+
+        <Style x:Key="BtnPrimary" TargetType="Button">
+            <Setter Property="Background"      Value="#00BFA5"/>
+            <Setter Property="Foreground"      Value="#0C1520"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Height"          Value="32"/>
+            <Setter Property="Padding"         Value="14,0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="3" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#00A896"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed"   Value="True">
+                                <Setter Property="Background" Value="#009688"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BtnGhost" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="Foreground"      Value="#A0B4C0"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Height"          Value="32"/>
+            <Setter Property="Padding"         Value="14,0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="BorderBrush"     Value="#2A3F55"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1C2D3A"/>
+                                <Setter Property="Foreground" Value="#E8F0F7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BtnDanger" TargetType="Button">
+            <Setter Property="Background"      Value="#C0392B"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Height"          Value="32"/>
+            <Setter Property="Padding"         Value="14,0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="3" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#A93226"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PosInput" TargetType="TextBox">
+            <Setter Property="Background"               Value="#1C2D3A"/>
+            <Setter Property="Foreground"               Value="#E8F0F7"/>
+            <Setter Property="CaretBrush"               Value="#00BFA5"/>
+            <Setter Property="BorderBrush"              Value="#2A3F55"/>
+            <Setter Property="BorderThickness"          Value="1"/>
+            <Setter Property="Height"                   Value="30"/>
+            <Setter Property="Padding"                  Value="8,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize"                 Value="12"/>
+        </Style>
+
+        <Style x:Key="PosCombo" TargetType="ComboBox">
+            <Setter Property="Background"      Value="#1C2D3A"/>
+            <Setter Property="Foreground"      Value="#E8F0F7"/>
+            <Setter Property="BorderBrush"     Value="#2A3F55"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height"          Value="30"/>
+            <Setter Property="FontSize"        Value="12"/>
+        </Style>
+
+        <Style x:Key="PosGrid" TargetType="DataGrid">
+            <Setter Property="Background"               Value="#111D2B"/>
+            <Setter Property="Foreground"               Value="#C8D8E4"/>
+            <Setter Property="BorderThickness"          Value="0"/>
+            <Setter Property="GridLinesVisibility"      Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#1C2D3A"/>
+            <Setter Property="RowBackground"            Value="#111D2B"/>
+            <Setter Property="AlternatingRowBackground" Value="#0D1825"/>
+            <Setter Property="AutoGenerateColumns"      Value="False"/>
+            <Setter Property="CanUserAddRows"           Value="False"/>
+            <Setter Property="HeadersVisibility"        Value="Column"/>
+            <Setter Property="SelectionMode"            Value="Single"/>
+            <Setter Property="FontSize"                 Value="12"/>
+        </Style>
+
+        <Style x:Key="PosGridRow" TargetType="DataGridRow">
+            <Setter Property="Height" Value="30"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected"  Value="True">
+                    <Setter Property="Background" Value="#1A4F45"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#162D3A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#6B8FA8"/>
+            <Setter Property="FontSize"   Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin"     Value="0,0,0,4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52"/>
+            <!-- TOP BAR -->
+            <RowDefinition Height="Auto"/>
+            <!-- PARTY INFO -->
+            <RowDefinition Height="Auto"/>
+            <!-- ENTRY -->
+            <RowDefinition Height="Auto"/>
+            <!-- ATTACH HINT -->
+            <RowDefinition Height="*"/>
+            <!-- GRID -->
+            <RowDefinition Height="Auto"/>
+            <!-- TOTALS -->
+            <RowDefinition Height="28"/>
+            <!-- FOOTER -->
+        </Grid.RowDefinitions>
+
+        <!-- ══════════════════ TOP BAR ══════════════════ -->
+        <Border Grid.Row="0" Background="#0C1520" BorderBrush="#1C2D3A" BorderThickness="0,0,0,1" Padding="18,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="3" Height="20" Background="#00BFA5" CornerRadius="2" Margin="0,0,10,0"/>
+                    <TextBlock Text="PAYMENT RECEIPT" FontSize="14" FontWeight="Bold" Foreground="#E8F0F7" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="TxtVoucherNo" FontSize="13" Foreground="#00BFA5" Margin="16,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    <Border x:Name="EditModeBadge" Background="#F39C12" CornerRadius="4" Padding="8,3" Margin="12,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">
+                        <TextBlock Text="✎ EDIT MODE" Foreground="#0C1520" FontSize="10" FontWeight="Bold"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="⟳ New"       Style="{StaticResource BtnGhost}"   Margin="4,0" Click="BtnNew_Click"/>
+                    <Button Content="💾 Save"      Style="{StaticResource BtnGhost}"   Margin="4,0" Click="BtnSave_Click"/>
+                    <Button Content="🗑 Clear"     Style="{StaticResource BtnGhost}"   Margin="4,0" Click="BtnClear_Click"/>
+                    <Button Content="🖨 Print"     Style="{StaticResource BtnGhost}"   Margin="4,0" Click="BtnPrint_Click"/>
+                    <Button Content="📋 Receipts" Style="{StaticResource BtnPrimary}" Margin="4,0" Click="BtnShowReceiptList_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ══════════════════ PARTY INFO ══════════════════ -->
+        <Border Grid.Row="1" Background="#0C1520" BorderBrush="#1C2D3A" BorderThickness="0,0,0,1" Padding="18,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Text="DATE"       Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="2" Text="PAID TO (PARTY)" Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="4" Text="PHONE"      Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="6" Text="ADDRESS"    Style="{StaticResource FieldLabel}"/>
+
+                <DatePicker x:Name="DtPaymentDate" Grid.Row="1" Grid.Column="0"
+                            Height="30" Width="130" Background="#1C2D3A"/>
+
+                <ComboBox x:Name="cmbParty" Grid.Row="1" Grid.Column="2"
+                          Style="{StaticResource PosCombo}"
+                          DisplayMemberPath="Name" SelectedValuePath="Id"
+                          SelectionChanged="cmbParty_SelectionChanged"/>
+
+                <TextBox x:Name="TxtPhone"   Grid.Row="1" Grid.Column="4" Style="{StaticResource PosInput}" IsReadOnly="True"/>
+                <TextBox x:Name="TxtAddress" Grid.Row="1" Grid.Column="6" Style="{StaticResource PosInput}" IsReadOnly="True"/>
+            </Grid>
+        </Border>
+
+        <!-- ══════════════════ ENTRY ══════════════════ -->
+        <Border Grid.Row="2" Background="#0C1520" BorderBrush="#1C2D3A" BorderThickness="0,0,0,1" Padding="18,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Text="AMOUNT PAID"         Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="2" Text="PAYMENT MODE"        Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="4" Text="REMARKS / DETAILS"   Style="{StaticResource FieldLabel}"/>
+                <TextBlock Grid.Column="6" Text="ATTACHMENT"          Style="{StaticResource FieldLabel}"/>
+
+                <TextBox x:Name="TxtAmount"  Grid.Row="1" Grid.Column="0" Style="{StaticResource PosInput}"/>
+
+                <ComboBox x:Name="cmbPaymentMode" Grid.Row="1" Grid.Column="2" Style="{StaticResource PosCombo}">
+                    <ComboBoxItem Content="Cash"          IsSelected="True"/>
+                    <ComboBoxItem Content="Bank Transfer"/>
+                    <ComboBoxItem Content="Cheque"/>
+                </ComboBox>
+
+                <TextBox x:Name="TxtRemarks" Grid.Row="1" Grid.Column="4" Style="{StaticResource PosInput}"/>
+
+                <Button x:Name="BtnAttach" Grid.Row="1" Grid.Column="6"
+                        Content="📎 Attach File"
+                        Style="{StaticResource BtnGhost}" Height="30"
+                        Click="BtnAttach_Click"/>
+
+                <Button x:Name="BtnClearAttach" Grid.Row="1" Grid.Column="8"
+                        Content="✕" Height="30" Width="30"
+                        Style="{StaticResource BtnDanger}" FontSize="11"
+                        Visibility="Collapsed" ToolTip="Remove attachment"
+                        Click="BtnClearAttach_Click"/>
+
+                <Button x:Name="BtnAdd" Grid.Row="1" Grid.Column="10"
+                        Content="＋ Add"
+                        Style="{StaticResource BtnPrimary}" Height="30"
+                        Click="BtnAdd_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- ══════════════════ ATTACHMENT HINT ══════════════════ -->
+        <TextBlock x:Name="TxtAttachHint" Grid.Row="3"
+                   Foreground="#00BFA5" FontSize="10"
+                   Margin="18,3,0,3"
+                   TextTrimming="CharacterEllipsis"
+                   Visibility="Collapsed"/>
+
+        <!-- ══════════════════ DATA GRID ══════════════════ -->
+        <DataGrid x:Name="dgPaymentReceipts" Grid.Row="4"
+                  Style="{StaticResource PosGrid}"
+                  RowStyle="{StaticResource PosGridRow}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="#"                 Binding="{Binding SrNo}"        Width="44"/>
+                <DataGridTextColumn Header="PARTY NAME"        Binding="{Binding PartyName}"   Width="160"/>
+                <DataGridTextColumn Header="PAYMENT MODE"      Binding="{Binding PaymentMode}" Width="120"/>
+                <DataGridTextColumn Header="AMOUNT PAID"       Binding="{Binding Amount, StringFormat=N2}" Width="110"/>
+                <DataGridTextColumn Header="REMARKS / DETAILS" Binding="{Binding Remarks}"     Width="*"/>
+
+                <DataGridTemplateColumn Header="📎" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="📎 Open"
+                                    Width="64" Height="22" FontSize="10"
+                                    Background="#007ACC" Foreground="White"
+                                    BorderThickness="0" Cursor="Hand"
+                                    Tag="{Binding SrNo}"
+                                    Visibility="{Binding HasAttachmentVisibility}"
+                                    Click="BtnOpenAttach_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="" Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="✕ Del" Tag="{Binding SrNo}"
+                                    Height="22" FontSize="10" Width="56"
+                                    Background="#C0392B" Foreground="White"
+                                    BorderThickness="0" Cursor="Hand"
+                                    Click="BtnDelete_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- ══════════════════ TOTALS ══════════════════ -->
+        <Border Grid.Row="5" Background="#0C1520" BorderBrush="#1C2D3A" BorderThickness="0,1,0,0" Padding="18,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="#1C2D3A" CornerRadius="4" Padding="14,6" Margin="0,0,10,0">
+                        <StackPanel>
+                            <TextBlock Text="ENTRIES" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="TxtEntriesCount" Text="0" Foreground="#E8F0F7" FontSize="18" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <Border Grid.Column="1" Background="#1A4F45" CornerRadius="4" Padding="20,6">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="TOTAL PAYMENT" Style="{StaticResource FieldLabel}" VerticalAlignment="Center" Foreground="#00BFA5"/>
+                        <TextBlock x:Name="TxtTotalAmount" Grid.Column="2"
+                                   Text="0.00" Foreground="#00BFA5"
+                                   FontSize="22" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ══════════════════ FOOTER ══════════════════ -->
+        <Border Grid.Row="6" Background="#0C1520" Padding="18,0">
+            <TextBlock Text="Hale Marketing International — Payment Receipt" Foreground="#3A5068" FontSize="10" VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- ══════════════════ SAVED RECEIPTS SIDE PANEL ══════════════════ -->
+        <Border x:Name="BorderReceiptList"
+                Grid.Row="0" Grid.RowSpan="7"
+                HorizontalAlignment="Right" Width="440"
+                Background="#0C1520" BorderBrush="#00BFA5" BorderThickness="1,0,0,0"
+                Visibility="Collapsed">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Panel Header -->
+                <Border Grid.Row="0" Background="#141F2B" Padding="14,0">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="3" Height="16" Background="#00BFA5" CornerRadius="2" Margin="0,0,8,0"/>
+                            <TextBlock Text="SAVED PAYMENT RECEIPTS" FontWeight="Bold" FontSize="12" Foreground="#00BFA5" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button Content="✕" HorizontalAlignment="Right" Width="28" Height="28"
+                                Background="Transparent" BorderThickness="0"
+                                Foreground="#6B8FA8" Cursor="Hand"
+                                Click="BtnCloseReceiptList_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Filters -->
+                <Border Grid.Row="1" Background="#111D2B" Padding="10,8">
+                    <StackPanel>
+                        <TextBox x:Name="TxtListSearch"
+                                 Style="{StaticResource PosInput}"
+                                 Text="Search voucher / party..."
+                                 GotFocus="TxtListSearch_GotFocus"
+                                 LostFocus="TxtListSearch_LostFocus"
+                                 TextChanged="TxtListSearch_TextChanged"
+                                 Margin="0,0,0,6"/>
+                        <StackPanel Orientation="Horizontal">
+                            <DatePicker x:Name="DtListFrom" Height="30" Width="130" Margin="0,0,6,0" Background="#1C2D3A"/>
+                            <DatePicker x:Name="DtListTo"   Height="30" Width="130" Margin="0,0,6,0" Background="#1C2D3A"/>
+                            <Button Content="🔍 Filter" Style="{StaticResource BtnPrimary}" Width="80" Click="BtnListFilter_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Receipts List -->
+                <DataGrid x:Name="DgReceiptList" Grid.Row="2"
+                          Style="{StaticResource PosGrid}"
+                          RowStyle="{StaticResource PosGridRow}"
+                          SelectionChanged="DgReceiptList_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="VOUCHER #" Binding="{Binding VoucherNo}"   Width="90"/>
+                        <DataGridTextColumn Header="DATE"      Binding="{Binding Date}"         Width="80"/>
+                        <DataGridTextColumn Header="PARTY"     Binding="{Binding PartyName}"    Width="*"/>
+                        <DataGridTextColumn Header="AMOUNT"    Binding="{Binding TotalAmount, StringFormat=N2}" Width="80"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Action Buttons -->
+                <Border Grid.Row="3" Background="#141F2B" Padding="10,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="TxtListStatus" Foreground="#6B8FA8" FontSize="10" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button x:Name="BtnLoadEdit"    Content="✎ Load &amp; Edit"
+                                    Style="{StaticResource BtnGhost}"  Margin="0,0,6,0"
+                                    Width="110" IsEnabled="False" Click="BtnLoadEdit_Click"/>
+                            <Button x:Name="BtnPrintSaved"  Content="🖨 Print"
+                                    Style="{StaticResource BtnGhost}"  Margin="0,0,6,0"
+                                    Width="70"  IsEnabled="False" Click="BtnPrintSaved_Click"/>
+                            <Button x:Name="BtnDeleteSaved" Content="🗑 Delete"
+                                    Style="{StaticResource BtnDanger}"
+                                    Width="76"  IsEnabled="False" Click="BtnDeleteSaved_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
