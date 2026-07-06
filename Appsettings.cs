@@ -32,8 +32,9 @@ namespace Hale_Marketing_International.Security
 
         // Same DB path as UserService ("Data Source=posdata.db")
         public static string DatabasePath =>
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "posdata.db");
-
+    Path.Combine(Environment.GetFolderPath(
+        Environment.SpecialFolder.LocalApplicationData),
+        "HaleMarketingInternational", "posdata.db");
         // ── Load / Save ───────────────────────────────────────────────────────
 
         private static AppSettings Load()
