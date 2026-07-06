@@ -15,7 +15,7 @@ namespace Hale_Marketing_International
 {
     public partial class StockWindow : Window
     {
-        private string _dbPath = "Data Source=posdata.db;Version=3;";
+        private string _dbPath = AppConfig.ConnectionString;
         private List<StockRow> _allRows = new();
         private List<StockRow> _filtered = new();
         private bool _searchPlaceholder = true;

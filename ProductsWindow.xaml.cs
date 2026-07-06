@@ -14,7 +14,7 @@ namespace Hale_Marketing_International
 {
     public partial class ProductsWindow : Window
     {
-        private string _dbPath = "Data Source=posdata.db;Version=3;";
+        private string _dbPath = AppConfig.ConnectionString;
         private int _selectedProductId = -1;
         private DataView _productsView;
 

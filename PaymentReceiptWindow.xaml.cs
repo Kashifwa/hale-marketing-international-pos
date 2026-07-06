@@ -15,7 +15,7 @@ namespace Hale_Marketing_International
 {
     public partial class PaymentReceiptWindow : Window
     {
-        private string _dbPath = "Data Source=posdata.db;Version=3;";
+        private string _dbPath = AppConfig.ConnectionString;
         private ObservableCollection<PaymentReceiptItem> _receiptItems = new ObservableCollection<PaymentReceiptItem>();
 
         // Pending attachment for current entry row

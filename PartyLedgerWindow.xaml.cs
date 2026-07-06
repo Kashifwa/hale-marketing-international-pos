@@ -15,7 +15,7 @@ namespace Hale_Marketing_International
 {
     public partial class PartyLedgerWindow : Window
     {
-        private string _dbPath = "Data Source=posdata.db;Version=3;";
+        private string _dbPath = AppConfig.ConnectionString;
         private Party _selectedParty;
 
         public PartyLedgerWindow()

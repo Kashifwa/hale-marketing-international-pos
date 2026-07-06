@@ -12,7 +12,8 @@ namespace Hale_Marketing_International
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
+            DatabaseInitializer.EnsureAllTables();
+            
             // ── No local DB found → show login with restore option ─────────────
             if (!AppSettings.Instance.IsSetupComplete)
             {

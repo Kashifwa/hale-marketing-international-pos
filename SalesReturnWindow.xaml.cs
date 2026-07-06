@@ -20,7 +20,7 @@ namespace Hale_Marketing_International
 {
     public partial class SalesReturnWindow : Window
     {
-        private string _dbPath = "Data Source=posdata.db;Version=3;";
+        private string _dbPath = AppConfig.ConnectionString;
         private ObservableCollection<ReturnItem> _items = new ObservableCollection<ReturnItem>();
 
         private byte[] _pendingAttachBytes = null;

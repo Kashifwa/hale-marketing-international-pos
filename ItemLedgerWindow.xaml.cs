@@ -16,7 +16,7 @@ namespace Hale_Marketing_International
 {
     public partial class ItemLedgerWindow : Window
     {
-        private string _dbPath = "Data Source=posdata.db;Version=3;";
+        private string _dbPath = AppConfig.ConnectionString;
 
         // Currently selected product
         private int _selectedProductId = 0;

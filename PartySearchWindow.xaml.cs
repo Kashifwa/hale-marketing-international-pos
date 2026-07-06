@@ -8,7 +8,7 @@ namespace Hale_Marketing_International
 {
     public partial class PartySearchWindow : Window
     {
-        private string _dbPath = "Data Source=posdata.db;Version=3;";
+        private string _dbPath = AppConfig.ConnectionString;
         private List<Party> _parties;
 
         public Party SelectedParty { get; private set; }

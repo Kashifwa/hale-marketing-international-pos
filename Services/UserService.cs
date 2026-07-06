@@ -7,7 +7,7 @@ namespace Hale_Marketing_International.Services
 {
     public static class UserService
     {
-        private static string _dbPath = "Data Source=posdata.db;Version=3;";
+        private static string _dbPath = AppConfig.ConnectionString;
 
         // Call this on app startup to ensure table exists
         public static void EnsureUserTable()

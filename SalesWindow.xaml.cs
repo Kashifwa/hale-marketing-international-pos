@@ -21,7 +21,7 @@ namespace Hale_Marketing_International
 {
     public partial class SalesWindow : Window
     {
-        private string _dbPath = "Data Source=posdata.db;Version=3;";
+        private string _dbPath = AppConfig.ConnectionString;
         private ObservableCollection<InvoiceItem> _items = new ObservableCollection<InvoiceItem>();
 
         private byte[] _pendingAttachBytes = null;

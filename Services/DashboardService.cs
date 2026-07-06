@@ -5,7 +5,7 @@ namespace Hale_Marketing_International.Services
 {
     public static class DashboardService
     {
-        static string conn = "Data Source=posdata.db;Version=3;";
+        static string conn = AppConfig.ConnectionString;
         // ---------- KPI ----------
         public static double TodaySales()
         {

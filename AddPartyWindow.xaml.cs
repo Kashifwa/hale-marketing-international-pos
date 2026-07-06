@@ -11,7 +11,7 @@ namespace Hale_Marketing_International
     public partial class AddPartyWindow : Window
     {
         private List<Party> parties = new();
-        private string partyDbPath = "Data Source=posdata.db;Version=3;";
+        private string partyDbPath = AppConfig.ConnectionString;
 
         public class Party
         {
